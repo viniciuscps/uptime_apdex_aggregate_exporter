@@ -5,12 +5,12 @@ resources:
     uri: https://github.com/emerald-squad/uptime_apdex_aggregate_exporter.git
     branch: 'master'
 
-- name: github
-  type: github-release
-  source:
-    user: emerald-squad
-    repository: uptime_apdex_aggregate_exporter
-    access_token: {{github-access-token}}
+#- name: github
+#  type: github-release
+#  source:
+#    user: emerald-squad
+#    repository: uptime_apdex_aggregate_exporter
+#    access_token: ((github-access-token))
 
 - name: version
   type: semver
@@ -20,7 +20,7 @@ resources:
     file: number
     initial_version: 1.0.0
     uri: git@github.com:emerald-squad/uptime_apdex_aggregate_exporter.git
-    private_key: {{git-key}}
+    private_key: ((git-key))
 
 jobs:
 - name: build-and-release
