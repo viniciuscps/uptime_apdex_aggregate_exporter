@@ -177,14 +177,12 @@ func init() {
 
 func main() {
 	var (
-		listenAddress        = flag.String("web.listen-address", ":9112", "Address to listen on for web interface and telemetry.")
-		urlTranfoDevExporter = flag.String("url.transfodev.exporter", "/metrics", "Path under which to expose metrics.")
-		urlPrometheusAPI     = flag.String("url.http.api.prometheus", "https://prometheus.system.cfzcea.dev.desjardins.com/api/v1",
-			"URL of Prometheus HTTP API")
-		instances = flag.String("url.transfodev.instances", "https://cache-exemple.apps.cfzcea.dev.desjardins.com/cachedMethod/15",
-			"URL instances of metrics to aggregate (comma separated).")
-		userPrometheusAPI     = flag.String("user.http.api.prometheus", "", "User to access the Prometheus HTTP API")
-		passwordPrometheusAPI = flag.String("password.http.api.prometheus", "", "Password to access the Prometheus HTTP API")
+		exporterPort          = flag.String("exporter.port", ":9405", "Address to listen on for web interface and telemetry.")
+		exporterURL           = flag.String("exporter.url", "/metrics", "Path under which to expose metrics.")
+		instances             = flag.String("exporter.instances", "", "URL instances of metrics to aggregate (comma separated).")
+		urlPrometheusAPI      = flag.String("prometheus.api.url", "", "URL of Prometheus HTTP API")
+		userPrometheusAPI     = flag.String("prometheus.api.user", "", "User to access the Prometheus HTTP API")
+		passwordPrometheusAPI = flag.String("prometheus.api.password", "", "Password to access the Prometheus HTTP API")
 	)
 	flag.Parse()
 
@@ -196,17 +194,17 @@ func main() {
 	log.Infoln("Register exporter")
 	prometheus.MustRegister(exporter)
 
-	http.Handle(*urlTranfoDevExporter, prometheus.Handler())
+	http.Handle(*exporterURL, prometheus.Handler())
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`<html>
              <head><title>TranfoDev Exporter</title></head>
              <body>
              <h1>TranfoDev Exporter</h1>
-             <p><a href='` + *urlTranfoDevExporter + `'>Metrics</a></p>
+             <p><a href='` + *exporterURL + `'>Metrics</a></p>
              </body>
              </html>`))
 	})
 
-	log.Infoln("Listening on", *listenAddress)
-	log.Fatal(http.ListenAndServe(*listenAddress, nil))
+	log.Infoln("Listening on", *exporterPort)
+	log.Fatal(http.ListenAndServe(*exporterPort, nil))
 }
