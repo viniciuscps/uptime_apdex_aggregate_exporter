@@ -178,7 +178,7 @@ func init() {
 func main() {
 	var (
 		exporterPort          = flag.String("exporter.port", ":9405", "Address to listen on for web interface and telemetry.")
-		exporterURL           = flag.String("exporter.url", "/metrics", "Path under which to expose metrics.")
+		exporterLocation      = flag.String("exporter.location", "/metrics", "Path under which to expose metrics.")
 		instances             = flag.String("exporter.instances", "", "URL instances of metrics to aggregate (comma separated).")
 		urlPrometheusAPI      = flag.String("prometheus.api.url", "", "URL of Prometheus HTTP API")
 		userPrometheusAPI     = flag.String("prometheus.api.user", "", "User to access the Prometheus HTTP API")
@@ -194,13 +194,13 @@ func main() {
 	log.Infoln("Register exporter")
 	prometheus.MustRegister(exporter)
 
-	http.Handle(*exporterURL, prometheus.Handler())
+	http.Handle(*exporterLocation, prometheus.Handler())
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`<html>
              <head><title>TranfoDev Exporter</title></head>
              <body>
              <h1>TranfoDev Exporter</h1>
-             <p><a href='` + *exporterURL + `'>Metrics</a></p>
+             <p><a href='` + *exporterLocation + `'>Metrics</a></p>
              </body>
              </html>`))
 	})
