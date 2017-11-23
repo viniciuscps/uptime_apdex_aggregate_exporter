@@ -1,7 +1,7 @@
 resources:
 - name: exporter-sources
   type: git
-  source: 
+  source:
     uri: git@github.com:emerald-squad/uptime_apdex_aggregate_exporter.git
     branch: 'master'
     private_key: ((uptime-apdex-aggregate-exporter-git-key))
@@ -47,6 +47,7 @@ jobs:
           go get github.com/prometheus/client_golang/prometheus
           go get github.com/prometheus/common/log
           go get github.com/prometheus/common/version
+          go get github.com/namsral/flag
           mkdir -p /go/src/github.com/emerald-squad
           mkdir -p gh/artifacts
           cd exporter-sources
@@ -75,4 +76,3 @@ jobs:
   - put: version
     params:
       bump: patch
-    

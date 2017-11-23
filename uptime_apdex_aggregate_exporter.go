@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -12,6 +11,7 @@ import (
 	prom_version "github.com/prometheus/common/version"
 
 	"github.com/dariubs/percent"
+	"github.com/namsral/flag"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/common/log"
 )
