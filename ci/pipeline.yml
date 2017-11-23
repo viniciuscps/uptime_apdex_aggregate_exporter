@@ -2,15 +2,16 @@ resources:
 - name: exporter-sources
   type: git
   source: 
-    uri: https://github.com/emerald-squad/uptime_apdex_aggregate_exporter.git
+    uri: git@github.com:emerald-squad/uptime_apdex_aggregate_exporter.git
     branch: 'master'
+    private_key: ((uptime-apdex-aggregate-exporter-git-key))
 
 - name: github
   type: github-release
   source:
     user: emerald-squad
     repository: uptime_apdex_aggregate_exporter
-    access_token: {{github-access-token}}
+    access_token: ((github-access-token))
 
 - name: version
   type: semver
@@ -20,7 +21,7 @@ resources:
     file: number
     initial_version: 1.0.0
     uri: git@github.com:emerald-squad/uptime_apdex_aggregate_exporter.git
-    private_key: {{git-key}}
+    private_key: ((uptime-apdex-aggregate-exporter-git-key))
 
 jobs:
 - name: build-and-release
@@ -39,17 +40,39 @@ jobs:
       run:
         path: sh
         args:
-        - -cxe
+        - -ce
         - |
           VERSION=$(cat version/number)
-          pushd exporter-sources
+          go get github.com/dariubs/percent
+          go get github.com/prometheus/client_golang/prometheus
+          go get github.com/prometheus/common/log
+          go get github.com/prometheus/common/version
+          mkdir -p /go/src/github.com/emerald-squad
+          mkdir -p gh/artifacts
+          cd exporter-sources
           make
-          tar -czvf graphite_exporter-${VERSION}.linux-amd64.tar.gz uptime-apdex-aggregate-exporter-linux-amd64
-          popd
-          mv exporter-sources/graphite_exporter-${VERSION}.linux-amd64.tar.gz archive/
-          exit 1
+          tar -czvf uptime_apdex_aggregate_exporter-${VERSION}.linux-amd64.tar.gz uptime-apdex-aggregate-exporter-linux-amd64
+          cd -
+          mv exporter-sources/uptime_apdex_aggregate_exporter-${VERSION}.linux-amd64.tar.gz gh/artifacts/
+          echo "v${VERSION}" > gh/tag
+          echo "v${VERSION}" > gh/name
       inputs:
       - name: exporter-sources
       - name: version
       outputs:
-      - name: archive
+      - name: gh
+  - put: exporter-sources
+    params:
+      repository: exporter-sources
+      tag: version/number
+      tag_prefix: v
+      only_tag: 'true'
+  - put: github
+    params:
+      name:   gh/name
+      tag:    gh/tag
+      globs: [gh/artifacts/*]
+  - put: version
+    params:
+      bump: patch
+    
