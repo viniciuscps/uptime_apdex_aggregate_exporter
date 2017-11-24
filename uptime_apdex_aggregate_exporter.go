@@ -177,12 +177,12 @@ func init() {
 
 func main() {
 	var (
-		exporterPort          = flag.String("exporter.port", ":9405", "Address to listen on for web interface and telemetry.")
-		exporterLocation      = flag.String("exporter.location", "/metrics", "Path under which to expose metrics.")
-		instances             = flag.String("exporter.instances", "", "URL instances of metrics to aggregate (comma separated).")
-		urlPrometheusAPI      = flag.String("prometheus.api.url", "", "URL of Prometheus HTTP API")
-		userPrometheusAPI     = flag.String("prometheus.api.user", "", "User to access the Prometheus HTTP API")
-		passwordPrometheusAPI = flag.String("prometheus.api.password", "", "Password to access the Prometheus HTTP API")
+		exporterPort          = flag.String("exporter-port", ":9405", "Address to listen on for web interface and telemetry.")
+		exporterLocation      = flag.String("exporter-location", "/metrics", "Path under which to expose metrics.")
+		instances             = flag.String("exporter-instances", "", "URL instances of metrics to aggregate (comma separated).")
+		urlPrometheusAPI      = flag.String("prometheus-api-url", "", "URL of Prometheus HTTP API")
+		userPrometheusAPI     = flag.String("prometheus-api-user", "", "User to access the Prometheus HTTP API")
+		passwordPrometheusAPI = flag.String("prometheus-api-password", "", "Password to access the Prometheus HTTP API")
 	)
 	flag.Parse()
 
