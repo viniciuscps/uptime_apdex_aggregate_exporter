@@ -177,7 +177,7 @@ func init() {
 
 func main() {
 	var (
-		exporterPort          = flag.String("exporter-port", ":9405", "Address to listen on for web interface and telemetry.")
+		exporterPort          = flag.String("exporter-port", "9405", "Address to listen on for web interface and telemetry.")
 		exporterLocation      = flag.String("exporter-location", "/metrics", "Path under which to expose metrics.")
 		instances             = flag.String("exporter-instances", "", "URL instances of metrics to aggregate (comma separated).")
 		urlPrometheusAPI      = flag.String("prometheus-api-url", "", "URL of Prometheus HTTP API")
@@ -206,5 +206,5 @@ func main() {
 	})
 
 	log.Infoln("Listening on", *exporterPort)
-	log.Fatal(http.ListenAndServe(*exporterPort, nil))
+	log.Fatal(http.ListenAndServe(":" + *exporterPort, nil))
 }
